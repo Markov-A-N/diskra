@@ -57,20 +57,21 @@ void twoDestroy(twoVector* v, int sz)
 
 void Sort(oneVector* v, int counter)
 {
-	int x, y, k;
+	int x, k;
+	Edge y;
 	for (int i = 0; i < counter-1; i++)
 	{
-		x = v->data[i]->power;
+		x = v->data[i].power;
 		k = i;
 		for (int j = i + 1; j < counter; j++)
 		{
-			if (v->data[j]->power < x)
+			if (v->data[j].power < x)
 			{
 				k = j;
 				y = v->data[j];
-				x = v->data[j]->power;
-				f->data[k] = f->data[i];
-				f->data[i] = y;
+				x = v->data[j].power;
+				v->data[k] = v->data[i];
+				v->data[i] = y;
 			}
 		}
 	}
@@ -79,9 +80,9 @@ void Sort(oneVector* v, int counter)
 
 int main(int argc, char * argv[])
 {
-	int razmer = 0, counter = 0, b = 0, apexPower;
+	int razmer = 0, counter = 0, b = 0;
 	int color[7] = {0, 1, 2, 3, 4, 5, 6};
-	char colorWords[] = {"Blue", "Red", "Green", "Yellow", "Magenta", "Gray", "Black"};
+	char *colorWords[7] = {"Blue", "Red", "Green", "Yellow", "Magenta", "Gray", "Black"};
 	oneVector *s;
 	twoVector *v, *k;
 	FILE *fp;
@@ -89,7 +90,7 @@ int main(int argc, char * argv[])
 	fp = fopen(argv[1], "r");
 	fout = fopen(argv[2], "w");
 
-	if (fp = NULL) 
+	if ((fp = NULL)) 
 	{
 		printf("Error");
 		return 0;
@@ -102,7 +103,7 @@ int main(int argc, char * argv[])
 	{
 		for (int j = 0; j < razmer; j++)
 		{
-			fscanf(fp, "%d", v->data[i][j]);
+			fscanf(fp, "%d", &(v->data[i][j]));
 			if (v->data[i][j] == 1)
 			{
 				counter++;
@@ -120,11 +121,11 @@ int main(int argc, char * argv[])
 			if (v->data[i][j] == 1)
 			{
 				v->data[j][i] = 0;
-				s->data[b]->i = i;
-				s->data[b]->j = j;
-				s->data[b]->color = 0;
-				s->data[b]->power = 0;
-				s->data[b]->name = b;
+				s->data[b].i = i;
+				s->data[b].j = j;
+				s->data[b].color = 0;
+				s->data[b].power = 0;
+				s->data[b].name = b;
 				b++;
 			}
 		}
@@ -142,10 +143,10 @@ int main(int argc, char * argv[])
 			}
 			else 
 			{
-				if ((s->data[i]->i == s->data[j]->i) || (s->data[i]->j == s->data[j]->j) || (s->data[i]->j == s->data[j]->i) || (s->data[i]->i == s->data[j]->j))
+				if ((s->data[i].i == s->data[j].i) || (s->data[i].j == s->data[j].j) || (s->data[i].j == s->data[j].i) || (s->data[i].i == s->data[j].j))
 				{
 					k->data[i][j] = 1;
-					s->data[i]->power++;
+					s->data[i].power++;
 				}
 				else 
 				{
@@ -158,14 +159,13 @@ int main(int argc, char * argv[])
 	Sort(s, counter);
 	for (int p = 0; p < counter; p++)
 	{
-		int i = 0, j = 0;
 		int n = 1;
 		Edge* last = NULL;
 		if (p == 0)
 		{
-			s->data[p]->color = color[n];
+			s->data[p].color = color[n];
 		} else {
-			s->data[p]->color = color[n];
+			s->data[p].color = color[n];
 		}
 		for (int u = 0; u < counter; u++)
 		{
@@ -174,8 +174,8 @@ int main(int argc, char * argv[])
 			{
 				if (p != u) 
 				{
-					s->data[u]->color = color[n];
-					last->name = s->data[u]->name;
+					s->data[u].color = color[n];
+					last->name = s->data[u].name;
 				}
 			}
 		}
@@ -205,7 +205,7 @@ int main(int argc, char * argv[])
 	fprintf(fout, "\nColors_Edges:\n");
 	for (int i = 0; i < counter; i++)
 	{
-		fprintf(fout, "%d %d %s\n", s->data[i]->j, s->data[i]->i, colorWords[s->data[i]->color]);
+		fprintf(fout, "%d %d %s\n", s->data[i].j, s->data[i].i, colorWords[s->data[i].color]);
 	}
 
 	fclose(fp);
