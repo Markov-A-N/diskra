@@ -2,28 +2,28 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-typedef struct 
+typedef struct
 {
 	int i;//начальная вершина ребра
 	int j;//конечная вершина ребра
 	int color;
 	int name;
-	int power;	
+	int power;
 } Edge;
 
-typedef struct 
+typedef struct
 {
 	int elem;
 	int diag;
 } dd;
 
-typedef struct 
+typedef struct
 {
 	Edge* data;
-	int size;	
+	int size;
 } oneVector;
 
-typedef struct 
+typedef struct
 {
 	dd** data;
 	int size;
@@ -63,7 +63,7 @@ void twoDestroy(twoVector* v, int sz)
 
 void Sort(oneVector* v, twoVector* z, int counter)
 {
-	int x, k, /*f, m, fDiag, mDiag*/;
+	int x, k;/* f, m, fDiag, mDiag;*/
 	Edge y;
 	for (int i = 0; i < counter-1; i++)
 	{
@@ -72,7 +72,7 @@ void Sort(oneVector* v, twoVector* z, int counter)
 		for (int j = i + 1; j < counter; j++)
 		{
 			if (v->data[j].power > x)
-			{
+            {
 				k = j;
 				y = v->data[j];
 				x = v->data[j].power;
@@ -88,7 +88,7 @@ void Sort(oneVector* v, twoVector* z, int counter)
 					z->data[i+1][tj].diag = fDiag;
 				}
 				for (int ti = 0; ti < counter; ti++)
-				{			
+				{
 					if (ti != i && ti != i+1)
 					{
 						m = z->data[ti][i].elem;
@@ -113,9 +113,7 @@ int main(int argc, char * argv[])
 	twoVector *k = (twoVector *) malloc(sizeof(twoVector) * 1);
 	twoVector *v = (twoVector *) malloc(sizeof(twoVector) * 1);
 	FILE* fin;
-	FILE* fout;
-	fin = fopen(argv[1], "r");
-	fout = fopen(argv[2], "w");
+	fin = fopen(argv[1], "r+t");
 
 	fscanf(fin, "%d", &razmer);
 	twoCreate(v, razmer);
@@ -164,14 +162,14 @@ int main(int argc, char * argv[])
 				k->data[i][j].diag = 1;
 
 			}
-			else 
+			else
 			{
 				if ((s->data[i].i == s->data[j].i) || (s->data[i].j == s->data[j].j) || (s->data[i].j == s->data[j].i) || (s->data[i].i == s->data[j].j))
 				{
 					k->data[i][j].elem = 1;
 					s->data[i].power++;
 				}
-				else 
+				else
 				{
 					k->data[i][j].elem = 0;
 				}
@@ -195,10 +193,10 @@ int main(int argc, char * argv[])
 		{
 			if (s->data[u].color == 0)
 			{
-				if (k->data[p][s->data[u].name].elem == 1 || (k->data[last->name][s->data[u].name].elem == 1)) continue;
-				else 
+				if (k->data[s->data[p].name][s->data[u].name].elem == 1 || (k->data[last->name][s->data[u].name].elem == 1)) continue;
+				else
 				{
-					if (k->data[p][s->data[u].name].diag != 1) 
+					if (k->data[p][s->data[u].name].diag != 1)
 					{
 						s->data[u].color = color[p+1];
 						last->name = s->data[u].name;
@@ -206,14 +204,14 @@ int main(int argc, char * argv[])
 					}
 				}
 			}
-			
+
 		}
 		/*for (int u = 0; u < counter; u++)
 		{
 			if (k->data[p][u].elem == 1 || (k->data[last->name][u].elem == 1) ) continue;
-			else 
+			else
 			{
-				if (k->data[p][u].diag != 1) 
+				if (k->data[p][u].diag != 1)
 				{
 					s->data[u].color = color[p+1];
 					last->name = s->data[u].name;
@@ -238,23 +236,26 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	fprintf(fout, "%d", razmer);
+	fclose(fin);
+	fin=fopen(argv[1],"w"); //Здесь он урезается до нулевого размера
+    //fclose(fin);*/
+    //fin=fopen(argv[1], "w");
+    fprintf(fin, "%d", razmer);
 	for (int i = 0; i < razmer; i++)
 	{
 		for (int j = 0; j < razmer; j++)
 		{
-			if (j%razmer == 0) fprintf(fout, "\n");
-			fprintf(fout, "%d ", v->data[i][j].elem);
+			if (j%razmer == 0) fprintf(fin, "\n");
+			fprintf(fin, "%d ", v->data[i][j].elem);
 		}
 	}
-	fprintf(fout, "\nColors_Edges:\n");
+	fprintf(fin, "\nColors_Edges:\n");
 	for (int i = 0; i < counter; i++)
 	{
-		fprintf(fout, "%d %d %s\n", s->data[i].j, s->data[i].i, colorWords[s->data[i].color]);
+		fprintf(fin, "%d %d %s\n", s->data[i].j, s->data[i].i, colorWords[s->data[i].color]);
 	}
 
 	fclose(fin);
-	fclose(fout);
 
 	return 0;
 }
