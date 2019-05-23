@@ -63,7 +63,7 @@ void twoDestroy(twoVector* v, int sz)
 
 void Sort(oneVector* v, twoVector* z, int counter)
 {
-	int x, k, f, m, fDiag, mDiag;
+	int x, k, /*f, m, fDiag, mDiag*/;
 	Edge y;
 	for (int i = 0; i < counter-1; i++)
 	{
@@ -78,7 +78,7 @@ void Sort(oneVector* v, twoVector* z, int counter)
 				x = v->data[j].power;
 				v->data[k] = v->data[i];
 				v->data[i] = y;
-				for (int tj = 0; tj < counter; tj++)
+				/*for (int tj = 0; tj < counter; tj++)
 				{
 					f = z->data[i][tj].elem;
 					fDiag = z->data[i][tj].diag;
@@ -98,7 +98,7 @@ void Sort(oneVector* v, twoVector* z, int counter)
 						z->data[ti][i+1].elem = m;
 						z->data[ti][i+1].diag = mDiag;
 					}
-				}
+				}*/
 			}
 		}
 	}
@@ -185,11 +185,30 @@ int main(int argc, char * argv[])
 		Edge* last = (Edge*) malloc(sizeof(Edge) * 1);
 		last->name = p;
 
-		s->data[p].color = color[p+1];
-		cc++;
+		if (s->data[p].color == 0)
+		{
+			s->data[p].color = color[p+1];
+			cc++;
+		}
 
-		
 		for (int u = 0; u < counter; u++)
+		{
+			if (s->data[u].color == 0)
+			{
+				if (k->data[p][s->data[u].name].elem == 1 || (k->data[last->name][s->data[u].name].elem == 1)) continue;
+				else 
+				{
+					if (k->data[p][s->data[u].name].diag != 1) 
+					{
+						s->data[u].color = color[p+1];
+						last->name = s->data[u].name;
+						cc++;
+					}
+				}
+			}
+			
+		}
+		/*for (int u = 0; u < counter; u++)
 		{
 			if (k->data[p][u].elem == 1 || (k->data[last->name][u].elem == 1) ) continue;
 			else 
@@ -201,8 +220,8 @@ int main(int argc, char * argv[])
 					cc++;
 				}
 			}
-		}
-		if (cc == counter)
+		}*/
+		if (cc >= counter)
 		{
 			break;
 		}
